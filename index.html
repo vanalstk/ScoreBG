@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
-<meta name="apple-mobile-web-app-title" content="ScoreBG"/>
-<title>ScoreBG</title>
+<meta name="apple-mobile-web-app-title" content="BGSP"/>
+<title>Backgammon Scorepad</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
  
@@ -103,7 +103,16 @@ body.hist-active .rotate-msg{display:none!important;}
 }
 .field input:focus{border-color:var(--accent);}
  
-.pts-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.pts-grid{display:flex;flex-direction:column;gap:6px;}
+.pts-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.pts-row-ext{display:grid;grid-template-columns:1fr 1fr 3fr;gap:6px;align-items:stretch;}
+.pts-app-name{
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--text-dim);font-weight:600;text-align:center;line-height:1.4;
+  background:var(--bg);border:0.5px solid var(--border);
+  border-radius:var(--r-sm);padding:6px 8px;
+}
 .pt-btn{
   padding:9px 2px;font-family:var(--sans);font-size:14px;font-weight:500;
   background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r-sm);
@@ -348,16 +357,25 @@ body.hist-active .rotate-msg{display:none!important;}
     <div class="setup-card">
       <div class="sc-label">Match length (points)</div>
       <div class="pts-grid" id="ptGrid">
-        <button class="pt-btn" data-v="1">1</button>
-        <button class="pt-btn" data-v="3">3</button>
-        <button class="pt-btn sel" data-v="5">5</button>
-        <button class="pt-btn" data-v="7">7</button>
-        <button class="pt-btn" data-v="9">9</button>
-        <button class="pt-btn" data-v="11">11</button>
-        <button class="pt-btn" data-v="13">13</button>
-        <button class="pt-btn" data-v="15">15</button>
-        <button class="pt-btn" data-v="17">17</button>
-        <button class="pt-btn" data-v="21">21</button>
+        <div class="pts-row">
+          <button class="pt-btn" data-v="1">1</button>
+          <button class="pt-btn" data-v="3">3</button>
+          <button class="pt-btn sel" data-v="5">5</button>
+          <button class="pt-btn" data-v="7">7</button>
+          <button class="pt-btn" data-v="9">9</button>
+        </div>
+        <div class="pts-row">
+          <button class="pt-btn" data-v="11">11</button>
+          <button class="pt-btn" data-v="13">13</button>
+          <button class="pt-btn" data-v="15">15</button>
+          <button class="pt-btn" data-v="17">17</button>
+          <button class="pt-btn" data-v="21">21</button>
+        </div>
+        <div class="pts-row-ext">
+          <button class="pt-btn" data-v="23">23</button>
+          <button class="pt-btn" data-v="25">25</button>
+          <div class="pts-app-name">Backgammon<br>Scorepad</div>
+        </div>
       </div>
     </div>
   </div>
@@ -434,7 +452,7 @@ body.hist-active .rotate-msg{display:none!important;}
   <!-- INFO -->
   <div class="screen" id="infoScreen">
     <div class="info-topbar">
-      <div class="info-title">ScoreBG</div>
+      <div class="info-title">Backgammon Scorepad</div>
       <button class="info-close" onclick="closeInfo()">← Back</button>
     </div>
     <div class="info-body">
@@ -442,10 +460,10 @@ body.hist-active .rotate-msg{display:none!important;}
         <p><strong>New Game button:</strong> Pressing New Game logs the current game scores to the History page and starts a new game. You will see no changes on the Scoreboard after pushing it.</p>
       </div>
       <div class="info-section">
-        <p><strong>Adding ScoreBG to your Home Screen:</strong> The app is available at <a href="http://vanalstk.github.io">vanalstk.github.io</a>. To create a button on your home screen, load the URL in Safari, tap the Share button (the box with an arrow pointing upward), scroll down until you see <em>Add to Home Screen</em> and tap it, then tap <em>Add</em> in the top right corner.</p>
+        <p><strong>Adding Backgammon Scorepad to your Home Screen:</strong> The app is available at <a href="http://vanalstk.github.io/ScoreBG">http://vanalstk.github.io/ScoreBG</a>. To create a button on your home screen, load the URL in Safari, tap the Share button (the box with an arrow pointing upward), scroll down until you see <em>Add to Home Screen</em> and tap it, then tap <em>Add</em> in the top right corner.</p>
       </div>
       <div class="info-section">
-        <p><strong>Compatibility:</strong> ScoreBG was optimized for Safari on an iPhone. It may not work well on other platforms.</p>
+        <p><strong>Compatibility:</strong> Backgammon Scorepad was optimized for Safari on an iPhone. It may not work well on other platforms.</p>
       </div>
       <div class="info-enjoy">Enjoy!</div>
       <div class="info-byline">Kathy Van Alstyne</div>
@@ -647,3 +665,4 @@ function renderHistory() {
 </script>
 </body>
 </html>
+ 
