@@ -140,6 +140,7 @@ body.hist-active .rotate-msg{display:none!important;}
   gap:clamp(5px,1vh,12px);
   border-right:1px solid var(--border);
   background:var(--surface);
+  overflow:hidden;
 }
 .p-panel.right{
   border-right:none;border-left:1px solid var(--border);
@@ -153,14 +154,16 @@ body.hist-active .rotate-msg{display:none!important;}
   background:var(--accent);opacity:0.45;flex-shrink:0;
 }
 .p-name{
-  font-size:clamp(15px,3.5vw,36px);letter-spacing:0.02em;text-transform:uppercase;font-weight:700;
+  font-size:clamp(13px,2.8vw,36px);letter-spacing:0.02em;text-transform:uppercase;font-weight:700;
   color:var(--text-mid);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;
+  flex-shrink:1;
 }
 .p-panel.right .p-name{text-align:right;}
  
 .score-big{
   font-family:var(--serif);font-size:clamp(52px,11vw,130px);line-height:1;
   color:var(--text);text-align:center;letter-spacing:-2px;
+  flex-shrink:1;min-height:0;
 }
 .p-panel.winner .score-big{color:var(--accent);}
  
@@ -171,7 +174,7 @@ body.hist-active .rotate-msg{display:none!important;}
 .pip{width:clamp(7px,1.3vw,13px);height:clamp(7px,1.3vw,13px);border-radius:50%;background:var(--border-md);}
 .pip.on{background:var(--text);}
  
-.score-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:auto;}
+.score-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;flex-shrink:0;margin-top:auto;}
 .s-btn{
   padding:clamp(9px,1.8vh,16px) 4px;font-size:clamp(20px,4vw,32px);font-weight:300;
   font-family:var(--sans);
@@ -543,4 +546,3 @@ function renderHistory() {
 </script>
 </body>
 </html>
- 
