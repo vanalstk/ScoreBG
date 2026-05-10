@@ -1,1 +1,1 @@
-Backgammon scorecard program that also tracks invdividual games
+Backgammon scorecard program that also tracks game scores during a match
