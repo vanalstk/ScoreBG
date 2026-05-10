@@ -74,7 +74,10 @@ body.hist-active .rotate-msg{display:none!important;}
 #setup{
   flex:1;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  padding:12px 16px;gap:10px;overflow-y:auto;
+  padding:env(safe-area-inset-top, 12px) 16px env(safe-area-inset-bottom, 12px);
+  padding-top:max(env(safe-area-inset-top), 12px);
+  padding-bottom:max(env(safe-area-inset-bottom), 12px);
+  gap:8px;overflow-y:auto;
 }
 .setup-grid{
   display:grid;grid-template-columns:1fr 1fr;
@@ -200,11 +203,12 @@ body.hist-active .rotate-msg{display:none!important;}
  
 .p-panel{
   flex:0 0 clamp(130px,28vw,240px);display:flex;flex-direction:column;
-  padding:clamp(8px,1.5vw,16px) clamp(6px,1vw,12px) clamp(8px,1.5vw,16px) clamp(8px,1.5vw,16px);
-  gap:clamp(5px,1vh,12px);
+  padding:clamp(6px,1.2vw,16px) clamp(6px,1vw,12px) clamp(6px,1.2vw,16px) clamp(6px,1.2vw,16px);
+  gap:clamp(4px,0.8vh,10px);
   border-right:1px solid var(--border);
   background:var(--surface);
-  overflow:hidden;
+  overflow:visible;
+  min-width:0;
 }
 .p-panel.right{
   border-right:none;border-left:1px solid var(--border);
@@ -225,7 +229,9 @@ body.hist-active .rotate-msg{display:none!important;}
 .p-panel.right .p-name{text-align:right;}
  
 .score-big{
-  font-family:var(--serif);font-size:clamp(52px,11vw,130px);line-height:1;
+  font-family:var(--serif);
+  font-size:clamp(40px,min(11vw,14vh),130px);
+  line-height:1;
   color:var(--text);text-align:center;letter-spacing:-2px;
   flex-shrink:1;min-height:0;
 }
@@ -238,14 +244,20 @@ body.hist-active .rotate-msg{display:none!important;}
 .pip{width:clamp(7px,1.3vw,13px);height:clamp(7px,1.3vw,13px);border-radius:50%;background:var(--border-md);}
 .pip.on{background:var(--text);}
  
-.score-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;flex-shrink:0;margin-top:auto;}
+.score-btns{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  flex-shrink:0;margin-top:auto;
+  min-height:clamp(44px,10vh,80px);
+}
 .s-btn{
-  padding:clamp(9px,1.8vh,16px) 4px;font-size:clamp(20px,4vw,32px);font-weight:300;
+  padding:0;font-size:clamp(20px,4vw,32px);font-weight:300;
   font-family:var(--sans);
   background:var(--bg);border:0.5px solid var(--border-md);
   border-radius:var(--r-sm);color:var(--text-mid);cursor:pointer;
   text-align:center;line-height:1;transition:background 0.1s;
   -webkit-appearance:none;
+  display:flex;align-items:center;justify-content:center;
+  width:100%;
 }
 .s-btn:active{background:var(--bg2);}
 .s-btn.add{
