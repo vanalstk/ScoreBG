@@ -600,9 +600,9 @@ function showHistory() {
  
 function adj(p, delta) {
   if (S.done) return;
-  /* Post-Crawford triggers on any point scored after the Crawford game */
-  if (S.seenCrawford && !S.crawfordGame && !S.postCrawford && delta > 0) {
-    S.postCrawford = true;
+  /* Clear Crawford banner on first point scored after Crawford game - just show Normal Play */
+  if (S.seenCrawford && S.crawfordGame && delta > 0) {
+    S.crawfordGame = false;
   }
   S.scores[p] = Math.max(0, S.scores[p] + delta);
   if (S.scores[p] >= S.ml) {
@@ -641,11 +641,7 @@ function logGame() {
     S.crawfordPlayer = -1;
     S.done = false;
   }
-  if (S.crawfordGame) {
-    S.crawfordGame = false;
-    S.postCrawford = false;
-    S.seenCrawford = true; /* already true, but keep explicit */
-  }
+  /* Leave crawfordGame = true so banner stays on Crawford until next point scored */
   render();
 }
  
@@ -716,3 +712,4 @@ function renderHistory() {
 </script>
 </body>
 </html>
+ 
