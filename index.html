@@ -519,6 +519,7 @@ var S = {
   crawfordGame: false,
   postCrawford: false,
   seenCrawford: false,
+  crawfordPlayer: -1,
   gameNum: 1,
   history: [],
   done: false
@@ -570,6 +571,7 @@ function startMatch() {
   S.crawfordGame = false;
   S.postCrawford = false;
   S.seenCrawford = false;
+  S.crawfordPlayer = -1;
   S.gameNum = 1;
   S.history = [];
   S.done = false;
@@ -598,8 +600,8 @@ function showHistory() {
  
 function adj(p, delta) {
   if (S.done) return;
-  /* Promote to post-Crawford on first score change after Crawford game */
-  if (S.seenCrawford && !S.crawfordGame && !S.postCrawford) {
+  /* Post-Crawford triggers on any point scored after the Crawford game */
+  if (S.seenCrawford && !S.crawfordGame && !S.postCrawford && delta > 0) {
     S.postCrawford = true;
   }
   S.scores[p] = Math.max(0, S.scores[p] + delta);
@@ -614,9 +616,14 @@ function adj(p, delta) {
  
 function checkCrawford() {
   if (S.seenCrawford || S.postCrawford) return;
-  if ((S.ml - S.scores[0]) === 1 || (S.ml - S.scores[1]) === 1) {
+  if ((S.ml - S.scores[0]) === 1) {
     S.crawfordGame = true;
     S.seenCrawford = true;
+    S.crawfordPlayer = 0;
+  } else if ((S.ml - S.scores[1]) === 1) {
+    S.crawfordGame = true;
+    S.seenCrawford = true;
+    S.crawfordPlayer = 1;
   }
 }
  
@@ -631,6 +638,7 @@ function logGame() {
     S.crawfordGame = false;
     S.postCrawford = false;
     S.seenCrawford = false;
+    S.crawfordPlayer = -1;
     S.done = false;
   }
   if (S.crawfordGame) {
