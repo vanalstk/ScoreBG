@@ -598,6 +598,10 @@ function showHistory() {
  
 function adj(p, delta) {
   if (S.done) return;
+  /* Promote to post-Crawford on first score change after Crawford game */
+  if (S.seenCrawford && !S.crawfordGame && !S.postCrawford) {
+    S.postCrawford = true;
+  }
   S.scores[p] = Math.max(0, S.scores[p] + delta);
   if (S.scores[p] >= S.ml) {
     S.scores[p] = S.ml;
@@ -631,7 +635,8 @@ function logGame() {
   }
   if (S.crawfordGame) {
     S.crawfordGame = false;
-    S.postCrawford = true;
+    S.postCrawford = false;
+    S.seenCrawford = true; /* already true, but keep explicit */
   }
   render();
 }
