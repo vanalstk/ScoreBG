@@ -199,69 +199,94 @@ body.hist-active .rotate-msg{display:none!important;}
 .screen.visible{display:flex;}
  
 /* ── MATCH SCREEN ── */
-#matchScreen{flex-direction:row;}
+#matchScreen{flex-direction:row;height:100%;}
  
+/* Each panel is a fixed-width column that fills the full height */
 .p-panel{
-  flex:0 0 clamp(130px,28vw,240px);display:flex;flex-direction:column;
-  padding:clamp(6px,1.2vw,16px) clamp(6px,1vw,12px) clamp(6px,1.2vw,16px) clamp(6px,1.2vw,16px);
-  gap:clamp(4px,0.8vh,10px);
+  flex:0 0 clamp(120px,26vw,220px);
+  height:100%;
+  display:flex;flex-direction:column;
+  padding:8px;
+  gap:0;
   border-right:1px solid var(--border);
   background:var(--surface);
-  overflow:visible;
-  min-width:0;
+  overflow:hidden;
+  box-sizing:border-box;
 }
 .p-panel.right{
-  border-right:none;border-left:1px solid var(--border);
-  padding:clamp(8px,1.5vw,16px) clamp(8px,1.5vw,16px) clamp(8px,1.5vw,16px) clamp(6px,1vw,12px);
+  border-right:none;
+  border-left:1px solid var(--border);
 }
  
-.p-name-row{display:flex;align-items:center;gap:6px;}
+/* Name row — fixed height, no shrink */
+.p-name-row{
+  display:flex;align-items:center;gap:6px;
+  flex:0 0 auto;
+  padding-bottom:4px;
+}
 .p-panel.right .p-name-row{flex-direction:row-reverse;}
 .p-dot{
-  width:8px;height:8px;border-radius:50%;
+  width:7px;height:7px;border-radius:50%;
   background:var(--accent);opacity:0.45;flex-shrink:0;
 }
 .p-name{
-  font-size:clamp(13px,2.8vw,36px);letter-spacing:0.02em;text-transform:uppercase;font-weight:700;
-  color:var(--text-mid);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;
-  flex-shrink:1;
+  font-size:clamp(12px,2.5vw,28px);
+  letter-spacing:0.02em;text-transform:uppercase;font-weight:700;
+  color:var(--text-mid);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  flex:1;min-width:0;
 }
 .p-panel.right .p-name{text-align:right;}
  
+/* Score number — takes available space, shrinks via font-size */
 .score-big{
+  flex:1;
+  display:flex;align-items:center;justify-content:center;
   font-family:var(--serif);
-  font-size:clamp(40px,min(11vw,14vh),130px);
+  font-size:clamp(36px,10vh,110px);
   line-height:1;
   color:var(--text);text-align:center;letter-spacing:-2px;
-  flex-shrink:1;min-height:0;
+  min-height:0;
+  overflow:hidden;
 }
 .p-panel.winner .score-big{color:var(--accent);}
  
+/* Pips row — fixed, compact */
 .pips-wrap{
-  display:flex;flex-wrap:wrap;gap:5px;justify-content:center;
-  min-height:14px;align-content:center;padding:0 2px;
+  display:flex;flex-wrap:wrap;gap:4px;justify-content:center;
+  flex:0 0 auto;
+  padding:3px 2px;
+  min-height:12px;
+  align-content:center;
 }
-.pip{width:clamp(7px,1.3vw,13px);height:clamp(7px,1.3vw,13px);border-radius:50%;background:var(--border-md);}
+.pip{
+  width:clamp(6px,1.2vw,11px);
+  height:clamp(6px,1.2vw,11px);
+  border-radius:50%;background:var(--border-md);
+  flex-shrink:0;
+}
 .pip.on{background:var(--text);}
  
+/* Buttons — fixed height at bottom, never shrink */
 .score-btns{
-  display:grid;grid-template-columns:1fr 1fr;gap:6px;
-  flex-shrink:0;margin-top:auto;
-  min-height:clamp(44px,10vh,80px);
+  flex:0 0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:5px;
+  height:clamp(42px,12vh,72px);
+  padding-top:5px;
 }
 .s-btn{
-  padding:0;font-size:clamp(20px,4vw,32px);font-weight:300;
+  height:100%;width:100%;
+  font-size:clamp(18px,5vh,32px);font-weight:300;
   font-family:var(--sans);
   background:var(--bg);border:0.5px solid var(--border-md);
   border-radius:var(--r-sm);color:var(--text-mid);cursor:pointer;
   text-align:center;line-height:1;transition:background 0.1s;
   -webkit-appearance:none;
   display:flex;align-items:center;justify-content:center;
-  width:100%;
+  padding:0;box-sizing:border-box;
 }
 .s-btn:active{background:var(--bg2);}
 .s-btn.add{
-  font-size:clamp(22px,4.5vw,36px);
+  font-size:clamp(20px,5.5vh,36px);
   background:var(--accent-bg);
   border-color:rgba(44,110,73,0.28);color:var(--accent);
 }
@@ -677,4 +702,3 @@ function renderHistory() {
 </script>
 </body>
 </html>
- 
