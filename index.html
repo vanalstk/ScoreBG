@@ -8,514 +8,284 @@
 <meta name="apple-mobile-web-app-title" content="BGScore"/>
 <title>BGScore</title>
 <style>
-*,*::before,*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-
-:root {
-  --bg: #F7F4EF;
-  --bg2: #EDEAE3;
-  --surface: #FFFFFF;
-  --border: rgba(60,50,30,0.13);
-  --border-md: rgba(60,50,30,0.22);
-  --text: #1A1610;
-  --text-mid: #4A4030;
-  --text-dim: #8A7E6A;
-  --accent: #2C6E49;
-  --accent-bg: #E8F5EE;
-  --red: #C0392B;
-  --red-bg: #FCECEA;
-  --amber: #A05C00;
-  --amber-bg: #FEF3E2;
-  --r: 14px;
-  --r-sm: 10px;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+ 
+:root{
+  --bg:#F7F4EF;
+  --bg2:#EDEAE3;
+  --surface:#FFFFFF;
+  --border:rgba(60,50,30,0.13);
+  --border-md:rgba(60,50,30,0.22);
+  --text:#1A1610;
+  --text-mid:#4A4030;
+  --text-dim:#8A7E6A;
+  --accent:#2C6E49;
+  --accent-bg:#E8F5EE;
+  --red:#C0392B;
+  --red-bg:#FCECEA;
+  --amber:#A05C00;
+  --amber-bg:#FEF3E2;
+  --r:14px;
+  --r-sm:10px;
   --serif: Georgia, 'Times New Roman', serif;
   --sans: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
 }
-
-html, body {
-  height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  overflow: hidden;
+ 
+html,body{
+  height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  overflow:hidden;
 }
-
-.app {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+ 
+.app{
+  width:100vw;width:100dvw;
+  height:100vh;height:100dvh;
+  display:flex;
+  flex-direction:column;
 }
-
-/* ══════════════════════════════
-   SETUP — works in portrait AND landscape
-══════════════════════════════ */
-#setup {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 20px;
-  gap: 16px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+ 
+/* Rotate nudge — only shown in portrait, never intercepts touches */
+.rotate-msg{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(247,244,239,0.96);
+  flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:14px;z-index:999;
+  pointer-events:none;
+  touch-action:none;
+  -webkit-user-select:none;
+  user-select:none;
 }
-
-.setup-inner {
-  width: 100%;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+/* Only show rotate message when screens are active (not on setup) */
+body.match-active .rotate-msg{display:flex;}
+@media screen and (orientation:landscape){
+  body.match-active .rotate-msg{display:none;}
 }
-
-.setup-card {
-  background: var(--surface);
-  border: 1px solid var(--border-md);
-  border-radius: var(--r);
-  padding: 20px;
+.rotate-msg p{
+  font-size:17px;color:var(--text-dim);
+  letter-spacing:0.08em;text-transform:uppercase;
 }
-
-.sc-label {
-  font-size: 16px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  margin-bottom: 16px;
-  font-weight: 600;
+ 
+/* ── SETUP ── */
+#setup{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:12px 16px;gap:10px;overflow-y:auto;
 }
-
-/* Player name fields side by side */
-.name-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+.setup-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;width:100%;max-width:680px;
 }
-
-.field label {
-  display: block;
-  font-size: 14px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  margin-bottom: 6px;
-  font-weight: 500;
+.setup-card{
+  background:var(--surface);border:0.5px solid var(--border-md);
+  border-radius:var(--r);padding:14px 16px;
 }
-
-.field input {
-  width: 100%;
-  padding: 14px;
-  font-family: var(--sans);
-  font-size: 20px;
-  font-weight: 600;
-  background: var(--bg);
-  border: 1px solid var(--border-md);
-  border-radius: var(--r-sm);
-  color: var(--text);
-  outline: none;
-  -webkit-appearance: none;
+.sc-label{
+  font-size:12px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:10px;font-weight:600;
 }
-
-.field input:focus {
-  border-color: var(--accent);
+.field{margin-bottom:10px;}
+.field:last-child{margin-bottom:0;}
+.field label{
+  display:block;font-size:12px;letter-spacing:0.07em;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:5px;font-weight:500;
 }
-
-/* Match length buttons — 5 per row, large touch targets */
-.pts-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
+.field input{
+  width:100%;padding:9px 12px;
+  font-family:var(--sans);font-size:16px;
+  background:var(--bg);border:0.5px solid var(--border-md);
+  border-radius:var(--r-sm);color:var(--text);outline:none;
+  -webkit-appearance:none;transition:border-color 0.15s;
 }
-
-.pt-btn {
-  padding: 16px 4px;
-  font-family: var(--sans);
-  font-size: 18px;
-  font-weight: 600;
-  background: var(--bg);
-  border: 1px solid var(--border-md);
-  border-radius: var(--r-sm);
-  color: var(--text-dim);
-  cursor: pointer;
-  text-align: center;
-  -webkit-appearance: none;
-  min-height: 56px;
+.field input:focus{border-color:var(--accent);}
+ 
+.pts-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.pt-btn{
+  padding:9px 2px;font-family:var(--sans);font-size:14px;font-weight:500;
+  background:var(--bg);border:0.5px solid var(--border);border-radius:var(--r-sm);
+  color:var(--text-dim);cursor:pointer;text-align:center;transition:all 0.12s;
+  -webkit-appearance:none;
 }
-
-.pt-btn.sel {
-  background: var(--text);
-  border-color: var(--text);
-  color: var(--bg);
+.pt-btn.sel{
+  background:var(--text);border-color:var(--text);
+  color:var(--bg);font-weight:700;
 }
-
-.start-btn {
-  width: 100%;
-  max-width: 600px;
-  padding: 20px;
-  font-family: var(--serif);
-  font-size: 26px;
-  letter-spacing: 0.02em;
-  background: var(--text);
-  color: var(--bg);
-  border: none;
-  border-radius: var(--r);
-  cursor: pointer;
-  -webkit-appearance: none;
-  min-height: 70px;
+ 
+.start-btn{
+  width:100%;max-width:680px;padding:14px;
+  font-family:var(--serif);font-size:20px;letter-spacing:0.03em;
+  background:var(--text);color:var(--bg);
+  border:none;border-radius:var(--r);cursor:pointer;
+  -webkit-appearance:none;transition:opacity 0.15s;
 }
-
-/* ══════════════════════════════
-   SCREENS
-══════════════════════════════ */
-#screens {
-  display: none;
-  flex: 1;
-  overflow: hidden;
-  position: relative;
+.start-btn:active{opacity:0.75;}
+ 
+/* ── SCREENS ── */
+#screens{display:none;flex:1;overflow:hidden;position:relative;}
+#screens.on{display:block;}
+ 
+.screen{position:absolute;inset:0;display:none;overflow:hidden;}
+.screen.visible{display:flex;}
+ 
+/* ── MATCH SCREEN ── */
+#matchScreen{flex-direction:row;}
+ 
+.p-panel{
+  flex:0 0 clamp(130px,28vw,240px);display:flex;flex-direction:column;
+  padding:clamp(8px,1.5vw,16px) clamp(6px,1vw,12px) clamp(8px,1.5vw,16px) clamp(8px,1.5vw,16px);
+  gap:clamp(5px,1vh,12px);
+  border-right:1px solid var(--border);
+  background:var(--surface);
 }
-
-#screens.on {
-  display: block;
+.p-panel.right{
+  border-right:none;border-left:1px solid var(--border);
+  padding:clamp(8px,1.5vw,16px) clamp(8px,1.5vw,16px) clamp(8px,1.5vw,16px) clamp(6px,1vw,12px);
 }
-
-.screen {
-  position: absolute;
-  inset: 0;
-  display: none;
-  overflow: hidden;
+ 
+.p-name-row{display:flex;align-items:center;gap:6px;}
+.p-panel.right .p-name-row{flex-direction:row-reverse;}
+.p-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);opacity:0.45;flex-shrink:0;
 }
-
-.screen.visible {
-  display: flex;
+.p-name{
+  font-size:clamp(15px,3.5vw,36px);letter-spacing:0.02em;text-transform:uppercase;font-weight:700;
+  color:var(--text-mid);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;
 }
-
-/* ══════════════════════════════
-   MATCH SCREEN — landscape layout
-══════════════════════════════ */
-#matchScreen {
-  flex-direction: row;
+.p-panel.right .p-name{text-align:right;}
+ 
+.score-big{
+  font-family:var(--serif);font-size:clamp(52px,11vw,130px);line-height:1;
+  color:var(--text);text-align:center;letter-spacing:-2px;
 }
-
-/* rotate hint — shown only in portrait during match, text only, no blocking */
-.landscape-hint {
-  display: none;
-  position: absolute;
-  bottom: 12px;
-  left: 0; right: 0;
-  text-align: center;
-  font-size: 14px;
-  color: var(--text-dim);
-  letter-spacing: 0.06em;
-  pointer-events: none;
-  z-index: 5;
+.p-panel.winner .score-big{color:var(--accent);}
+ 
+.pips-wrap{
+  display:flex;flex-wrap:wrap;gap:5px;justify-content:center;
+  min-height:14px;align-content:center;padding:0 2px;
 }
-
-@media screen and (orientation: portrait) {
-  .landscape-hint { display: block; }
+.pip{width:clamp(7px,1.3vw,13px);height:clamp(7px,1.3vw,13px);border-radius:50%;background:var(--border-md);}
+.pip.on{background:var(--text);}
+ 
+.score-btns{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:auto;}
+.s-btn{
+  padding:clamp(9px,1.8vh,16px) 4px;font-size:clamp(20px,4vw,32px);font-weight:300;
+  font-family:var(--sans);
+  background:var(--bg);border:0.5px solid var(--border-md);
+  border-radius:var(--r-sm);color:var(--text-mid);cursor:pointer;
+  text-align:center;line-height:1;transition:background 0.1s;
+  -webkit-appearance:none;
 }
-
-/* Player panels */
-.p-panel {
-  flex: 0 0 240px;
-  display: flex;
-  flex-direction: column;
-  padding: 16px 12px 16px 16px;
-  gap: 12px;
-  border-right: 1px solid var(--border);
-  background: var(--surface);
+.s-btn:active{background:var(--bg2);}
+.s-btn.add{
+  font-size:clamp(22px,4.5vw,36px);
+  background:var(--accent-bg);
+  border-color:rgba(44,110,73,0.28);color:var(--accent);
 }
-
-.p-panel.right {
-  border-right: none;
-  border-left: 1px solid var(--border);
-  padding: 16px 16px 16px 12px;
+.s-btn.add:active{background:#cce8d8;}
+ 
+/* ── CENTRE COLUMN ── */
+.c-col{
+  flex:1;display:flex;flex-direction:column;
+  padding:clamp(8px,1.5vw,16px) clamp(6px,1vw,12px);gap:clamp(5px,1vh,12px);
+  overflow:hidden;min-width:0;background:var(--bg);
 }
-
-.p-name-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.match-meta{
+  display:flex;justify-content:center;align-items:center;
+  gap:8px;flex-shrink:0;
 }
-
-.p-panel.right .p-name-row {
-  flex-direction: row-reverse;
+.meta-tag{
+  font-size:clamp(11px,2.2vw,20px);letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--text-dim);font-weight:600;
 }
-
-.p-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity: 0.45;
-  flex-shrink: 0;
+.meta-dot{width:4px;height:4px;border-radius:50%;background:var(--border-md);}
+ 
+.status-bar{
+  text-align:center;padding:clamp(7px,1.2vh,12px) 10px;border-radius:100px;
+  font-size:clamp(12px,2.4vw,20px);font-weight:700;letter-spacing:0.03em;flex-shrink:0;
 }
-
-.p-name {
-  font-size: 36px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: var(--text-mid);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
+.s-normal{background:rgba(60,50,30,0.06);color:var(--text-dim);}
+.s-crawford{background:var(--red-bg);color:var(--red);}
+.s-post{background:var(--amber-bg);color:var(--amber);}
+.s-done{background:var(--accent-bg);color:var(--accent);}
+ 
+.act-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;flex-shrink:0;}
+.a-btn{
+  padding:clamp(8px,1.5vh,15px) 2px;font-family:var(--sans);font-size:clamp(10px,1.8vw,15px);
+  letter-spacing:0.03em;text-transform:uppercase;font-weight:700;
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:var(--r-sm);color:var(--text-mid);cursor:pointer;
+  text-align:center;transition:background 0.1s;-webkit-appearance:none;
 }
-
-.p-panel.right .p-name {
-  text-align: right;
+.a-btn:active{background:var(--bg2);}
+ 
+.c-spacer{flex:1;}
+ 
+/* ── HISTORY SCREEN ── */
+#histScreen{flex-direction:column;background:var(--bg);}
+ 
+.hist-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;border-bottom:0.5px solid var(--border);
+  background:var(--surface);flex-shrink:0;
 }
-
-.score-big {
-  font-family: var(--serif);
-  font-size: 130px;
-  line-height: 1;
-  color: var(--text);
-  text-align: center;
-  letter-spacing: -4px;
+.hist-title{font-family:var(--serif);font-size:26px;color:var(--text);}
+.back-btn{
+  padding:11px 22px;font-family:var(--sans);font-size:15px;
+  letter-spacing:0.06em;text-transform:uppercase;font-weight:700;
+  background:var(--bg);border:0.5px solid var(--border-md);
+  border-radius:var(--r-sm);color:var(--text-mid);cursor:pointer;
+  -webkit-appearance:none;
 }
-
-.p-panel.winner .score-big {
-  color: var(--accent);
+.back-btn:active{background:var(--bg2);}
+ 
+.hist-body{
+  flex:1;overflow-y:auto;padding:14px 20px;
+  display:flex;flex-direction:column;gap:8px;
 }
-
-.pips-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  justify-content: center;
-  min-height: 22px;
-  align-content: center;
-  padding: 0 4px;
+.h-card{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:var(--r-sm);
+  display:grid;grid-template-columns:80px 1fr auto;
+  align-items:center;gap:12px;padding:14px 18px;
 }
-
-.pip {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: var(--border-md);
-}
-
-.pip.on {
-  background: var(--text);
-}
-
-.score-btns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
-  margin-top: auto;
-}
-
-.s-btn {
-  padding: 16px 4px;
-  font-size: 32px;
-  font-weight: 300;
-  font-family: var(--sans);
-  background: var(--bg);
-  border: 1px solid var(--border-md);
-  border-radius: var(--r-sm);
-  color: var(--text-mid);
-  cursor: pointer;
-  text-align: center;
-  line-height: 1;
-  -webkit-appearance: none;
-  min-height: 60px;
-}
-
-.s-btn.add {
-  font-size: 36px;
-  background: var(--accent-bg);
-  border-color: rgba(44,110,73,0.28);
-  color: var(--accent);
-}
-
-/* Centre column */
-.c-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 16px 12px;
-  gap: 12px;
-  overflow: hidden;
-  min-width: 0;
-  background: var(--bg);
-}
-
-.match-meta {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.meta-tag {
-  font-size: 20px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  font-weight: 600;
-}
-
-.meta-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--border-md);
-}
-
-.status-bar {
-  text-align: center;
-  padding: 12px 14px;
-  border-radius: 100px;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  flex-shrink: 0;
-}
-
-.s-normal  { background: rgba(60,50,30,0.06); color: var(--text-dim); }
-.s-crawford{ background: var(--red-bg);       color: var(--red);      }
-.s-post    { background: var(--amber-bg);     color: var(--amber);    }
-.s-done    { background: var(--accent-bg);    color: var(--accent);   }
-
-.act-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 9px;
-  flex-shrink: 0;
-}
-
-.a-btn {
-  padding: 15px 4px;
-  font-family: var(--sans);
-  font-size: 15px;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  font-weight: 700;
-  background: var(--surface);
-  border: 1px solid var(--border-md);
-  border-radius: var(--r-sm);
-  color: var(--text-mid);
-  cursor: pointer;
-  text-align: center;
-  -webkit-appearance: none;
-  min-height: 52px;
-}
-
-.a-btn:active { background: var(--bg2); }
-.c-spacer { flex: 1; }
-
-/* ══════════════════════════════
-   HISTORY SCREEN
-══════════════════════════════ */
-#histScreen {
-  flex-direction: column;
-  background: var(--bg);
-}
-
-.hist-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-  flex-shrink: 0;
-}
-
-.hist-title {
-  font-family: var(--serif);
-  font-size: 26px;
-  color: var(--text);
-}
-
-.back-btn {
-  padding: 12px 24px;
-  font-family: var(--sans);
-  font-size: 16px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-weight: 700;
-  background: var(--bg);
-  border: 1px solid var(--border-md);
-  border-radius: var(--r-sm);
-  color: var(--text-mid);
-  cursor: pointer;
-  -webkit-appearance: none;
-  min-height: 52px;
-}
-
-.hist-body {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 14px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.h-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-sm);
-  display: grid;
-  grid-template-columns: 80px 1fr auto;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-}
-
-.h-gnum   { font-size: 18px; color: var(--text-dim); font-weight: 500; }
-.h-scores { font-size: 20px; color: var(--text-mid); font-weight: 600; }
-.h-note   { font-size: 18px; color: var(--accent);   font-weight: 600; text-align: right; }
-
-.h-card-live { border-color: rgba(44,110,73,0.3); background: var(--accent-bg); }
-.h-card-live .h-gnum   { color: var(--accent); }
-.h-card-live .h-scores { color: var(--text);   }
-
-.hist-empty-msg {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: var(--text-dim);
+.h-gnum{font-size:18px;color:var(--text-dim);letter-spacing:0.04em;font-weight:500;}
+.h-scores{font-size:20px;color:var(--text-mid);font-weight:600;}
+.h-note{font-size:18px;color:var(--accent);text-align:right;font-weight:600;}
+.h-card-live{border-color:rgba(44,110,73,0.3);background:var(--accent-bg);}
+.h-card-live .h-gnum{color:var(--accent);}
+.h-card-live .h-scores{color:var(--text);}
+.hist-empty-msg{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:var(--text-dim);letter-spacing:0.05em;
 }
 </style>
 </head>
 <body>
+ 
+<div class="rotate-msg"><p>Rotate to landscape to play</p></div>
+ 
 <div class="app">
-
-<!-- ══ SETUP ══ -->
+ 
+<!-- SETUP -->
 <div id="setup">
-  <div class="setup-inner">
-
+  <div class="setup-grid">
     <div class="setup-card">
       <div class="sc-label">Players</div>
-      <div class="name-row">
-        <div class="field">
-          <label>Player 1</label>
-          <input id="p1" type="text" value="Player 1"
-            autocomplete="off" autocorrect="off"
-            autocapitalize="words" spellcheck="false"/>
-        </div>
-        <div class="field">
-          <label>Player 2</label>
-          <input id="p2" type="text" value="Player 2"
-            autocomplete="off" autocorrect="off"
-            autocapitalize="words" spellcheck="false"/>
-        </div>
+      <div class="field">
+        <label>Player 1</label>
+        <input id="p1" type="text" value="Player 1"
+          autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false"/>
+      </div>
+      <div class="field">
+        <label>Player 2</label>
+        <input id="p2" type="text" value="Player 2"
+          autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false"/>
       </div>
     </div>
-
     <div class="setup-card">
       <div class="sc-label">Match length (points)</div>
       <div class="pts-grid" id="ptGrid">
@@ -531,20 +301,16 @@ html, body {
         <button class="pt-btn" data-v="21">21</button>
       </div>
     </div>
-
-    <button class="start-btn" id="startBtn">Begin Match</button>
-
   </div>
+  <button class="start-btn" id="startBtn">Begin Match</button>
 </div>
-
-<!-- ══ SCREENS ══ -->
+ 
+<!-- SCREENS -->
 <div id="screens">
-
+ 
   <!-- MATCH -->
   <div class="screen visible" id="matchScreen">
-
-    <div class="landscape-hint">Rotate to landscape for best view</div>
-
+ 
     <!-- Player 1 left -->
     <div class="p-panel" id="pan0">
       <div class="p-name-row">
@@ -554,11 +320,11 @@ html, body {
       <div class="score-big" id="ps0">0</div>
       <div class="pips-wrap" id="pp0"></div>
       <div class="score-btns">
-        <button class="s-btn" onclick="adj(0,-1)">&#8722;</button>
+        <button class="s-btn" onclick="adj(0,-1)">−</button>
         <button class="s-btn add" onclick="adj(0,1)">+</button>
       </div>
     </div>
-
+ 
     <!-- Centre -->
     <div class="c-col">
       <div class="match-meta">
@@ -574,7 +340,7 @@ html, body {
       </div>
       <div class="c-spacer"></div>
     </div>
-
+ 
     <!-- Player 2 right -->
     <div class="p-panel right" id="pan1">
       <div class="p-name-row">
@@ -584,32 +350,32 @@ html, body {
       <div class="score-big" id="ps1">0</div>
       <div class="pips-wrap" id="pp1"></div>
       <div class="score-btns">
-        <button class="s-btn" onclick="adj(1,-1)">&#8722;</button>
+        <button class="s-btn" onclick="adj(1,-1)">−</button>
         <button class="s-btn add" onclick="adj(1,1)">+</button>
       </div>
     </div>
-
+ 
   </div><!-- #matchScreen -->
-
+ 
   <!-- HISTORY -->
   <div class="screen" id="histScreen">
     <div class="hist-topbar">
       <div class="hist-title">Game History</div>
-      <button class="back-btn" onclick="showMatch()">&#8592; Back</button>
+      <button class="back-btn" onclick="showMatch()">← Back</button>
     </div>
     <div class="hist-body" id="histBody">
       <div class="hist-empty-msg">No games recorded yet</div>
     </div>
   </div>
-
+ 
 </div><!-- #screens -->
 </div><!-- .app -->
-
+ 
 <script>
 var S = {
-  p: ['Player 1', 'Player 2'],
+  p: ['Player 1','Player 2'],
   ml: 5,
-  scores: [0, 0],
+  scores: [0,0],
   crawfordGame: false,
   postCrawford: false,
   seenCrawford: false,
@@ -617,24 +383,26 @@ var S = {
   history: [],
   done: false
 };
-
+ 
 var selPts = 5;
-
+ 
 document.getElementById('ptGrid').addEventListener('click', function(e) {
-  var b = e.target;
-  if (!b || b.className.indexOf('pt-btn') === -1) return;
-  selPts = parseInt(b.getAttribute('data-v'));
+  var b = e.target.closest('.pt-btn');
+  if (!b) return;
+  selPts = parseInt(b.dataset.v);
   var btns = document.querySelectorAll('.pt-btn');
   for (var i = 0; i < btns.length; i++) {
-    if (btns[i] === b) {
-      btns[i].className = 'pt-btn sel';
-    } else {
-      btns[i].className = 'pt-btn';
-    }
+    btns[i].classList.toggle('sel', btns[i] === b);
   }
 });
-
-document.getElementById('startBtn').addEventListener('click', function() {
+ 
+document.getElementById('startBtn').addEventListener('click', startMatch);
+document.getElementById('startBtn').addEventListener('touchend', function(e) {
+  e.preventDefault();
+  startMatch();
+});
+ 
+function startMatch() {
   S.p[0] = document.getElementById('p1').value.trim() || 'Player 1';
   S.p[1] = document.getElementById('p2').value.trim() || 'Player 2';
   S.ml = selPts;
@@ -646,31 +414,26 @@ document.getElementById('startBtn').addEventListener('click', function() {
   S.history = [];
   S.done = false;
   document.getElementById('setup').style.display = 'none';
-  document.getElementById('screens').style.display = 'block';
-  document.getElementById('screens').className = 'on';
+  document.getElementById('screens').classList.add('on');
+  document.body.classList.add('match-active');
   showMatch();
   render();
-});
-
-function showMatch() {
-  document.getElementById('matchScreen').style.display = 'flex';
-  document.getElementById('matchScreen').className = 'screen visible';
-  document.getElementById('histScreen').style.display = 'none';
-  document.getElementById('histScreen').className = 'screen';
 }
-
+ 
+function showMatch() {
+  document.getElementById('matchScreen').classList.add('visible');
+  document.getElementById('histScreen').classList.remove('visible');
+}
+ 
 function showHistory() {
   renderHistory();
-  document.getElementById('matchScreen').style.display = 'none';
-  document.getElementById('matchScreen').className = 'screen';
-  document.getElementById('histScreen').style.display = 'flex';
-  document.getElementById('histScreen').className = 'screen visible';
+  document.getElementById('matchScreen').classList.remove('visible');
+  document.getElementById('histScreen').classList.add('visible');
 }
-
+ 
 function adj(p, delta) {
   if (S.done) return;
-  S.scores[p] = S.scores[p] + delta;
-  if (S.scores[p] < 0) S.scores[p] = 0;
+  S.scores[p] = Math.max(0, S.scores[p] + delta);
   if (S.scores[p] >= S.ml) {
     S.scores[p] = S.ml;
     S.done = true;
@@ -679,7 +442,7 @@ function adj(p, delta) {
   }
   render();
 }
-
+ 
 function checkCrawford() {
   if (S.seenCrawford || S.postCrawford) return;
   if ((S.ml - S.scores[0]) === 1 || (S.ml - S.scores[1]) === 1) {
@@ -687,15 +450,12 @@ function checkCrawford() {
     S.seenCrawford = true;
   }
 }
-
+ 
 function logGame() {
-  var winner = S.scores[0] >= S.ml ? 0 : 1;
-  var note = S.done ? S.p[winner] + ' wins match' : '';
-  S.history.push({
-    g: S.gameNum,
-    s: [S.scores[0], S.scores[1]],
-    note: note
-  });
+  var note = S.done
+    ? (S.scores[0] >= S.ml ? S.p[0] : S.p[1]) + ' wins match'
+    : '';
+  S.history.push({ g: S.gameNum, s: [S.scores[0], S.scores[1]], note: note });
   S.gameNum++;
   if (S.done) {
     S.scores = [0, 0];
@@ -703,48 +463,43 @@ function logGame() {
     S.postCrawford = false;
     S.seenCrawford = false;
     S.done = false;
-  } else if (S.crawfordGame) {
+  }
+  if (S.crawfordGame) {
     S.crawfordGame = false;
     S.postCrawford = true;
   }
   render();
 }
-
+ 
 function newMatch() {
-  document.getElementById('screens').style.display = 'none';
-  document.getElementById('screens').className = '';
+  document.getElementById('screens').classList.remove('on');
   document.getElementById('setup').style.display = '';
+  document.body.classList.remove('match-active');
   showMatch();
 }
-
+ 
 function makePips(el, score, total) {
   el.innerHTML = '';
-  var n = total < 25 ? total : 25;
+  var n = Math.min(total, 25);
   for (var i = 0; i < n; i++) {
     var d = document.createElement('div');
-    d.className = i < score ? 'pip on' : 'pip';
+    d.className = 'pip' + (i < score ? ' on' : '');
     el.appendChild(d);
   }
 }
-
+ 
 function render() {
-  var i, wi, pill;
-  for (i = 0; i < 2; i++) {
+  for (var i = 0; i < 2; i++) {
     document.getElementById('pn' + i).textContent = S.p[i];
     document.getElementById('ps' + i).textContent = S.scores[i];
     makePips(document.getElementById('pp' + i), S.scores[i], S.ml);
-    var panel = document.getElementById('pan' + i);
-    if (S.done && S.scores[i] >= S.ml) {
-      panel.className = 'p-panel winner' + (i === 1 ? ' right' : '');
-    } else {
-      panel.className = 'p-panel' + (i === 1 ? ' right' : '');
-    }
+    document.getElementById('pan' + i).classList.toggle('winner', S.done && S.scores[i] >= S.ml);
   }
   document.getElementById('mTitle').textContent = S.ml + '-pt match';
   document.getElementById('mGame').textContent = 'Game ' + S.gameNum;
-  pill = document.getElementById('sPill');
+  var pill = document.getElementById('sPill');
   if (S.done) {
-    wi = S.scores[0] >= S.ml ? 0 : 1;
+    var wi = S.scores[0] >= S.ml ? 0 : 1;
     pill.textContent = S.p[wi] + ' wins!';
     pill.className = 'status-bar s-done';
   } else if (S.crawfordGame) {
@@ -758,29 +513,29 @@ function render() {
     pill.className = 'status-bar s-normal';
   }
 }
-
+ 
 function renderHistory() {
   var body = document.getElementById('histBody');
-  var html = '';
-  var i, h;
-  for (i = 0; i < S.history.length; i++) {
-    h = S.history[i];
-    html += '<div class="h-card">';
-    html += '<span class="h-gnum">Game ' + h.g + '</span>';
-    html += '<span class="h-scores">' + S.p[0] + ' ' + h.s[0] + ' \u2013 ' + h.s[1] + ' ' + S.p[1] + '</span>';
-    html += h.note ? '<span class="h-note">' + h.note + '</span>' : '<span></span>';
-    html += '</div>';
-  }
+  var rows = S.history.map(function(h) {
+    return '<div class="h-card">'
+      + '<span class="h-gnum">Game ' + h.g + '</span>'
+      + '<span class="h-scores">' + S.p[0] + ' \u00a0' + h.s[0] + ' \u2013 ' + h.s[1] + '\u00a0 ' + S.p[1] + '</span>'
+      + (h.note ? '<span class="h-note">' + h.note + '</span>' : '<span></span>')
+      + '</div>';
+  });
   var liveNote = S.done
     ? (S.scores[0] >= S.ml ? S.p[0] : S.p[1]) + ' wins!'
     : 'in progress';
-  html += '<div class="h-card h-card-live">';
-  html += '<span class="h-gnum">Game ' + S.gameNum + '</span>';
-  html += '<span class="h-scores">' + S.p[0] + ' ' + S.scores[0] + ' \u2013 ' + S.scores[1] + ' ' + S.p[1] + '</span>';
-  html += '<span class="h-note">' + liveNote + '</span>';
-  html += '</div>';
-  body.innerHTML = html;
+  rows.push(
+    '<div class="h-card h-card-live">'
+    + '<span class="h-gnum">Game ' + S.gameNum + '</span>'
+    + '<span class="h-scores">' + S.p[0] + ' \u00a0' + S.scores[0] + ' \u2013 ' + S.scores[1] + '\u00a0 ' + S.p[1] + '</span>'
+    + '<span class="h-note">' + liveNote + '</span>'
+    + '</div>'
+  );
+  body.innerHTML = rows.join('');
 }
 </script>
 </body>
 </html>
+ 
