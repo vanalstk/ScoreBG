@@ -124,6 +124,61 @@ body.hist-active .rotate-msg{display:none!important;}
 }
 .start-btn:active{opacity:0.75;}
  
+ 
+/* ── START ROW (Begin Match + Info button) ── */
+.start-row{
+  display:flex;align-items:center;gap:10px;width:100%;max-width:680px;
+}
+.start-row .start-btn{flex:1;width:auto;}
+.info-btn{
+  flex-shrink:0;width:42px;height:42px;
+  font-family:var(--sans);font-size:18px;font-weight:700;
+  background:var(--surface);border:0.5px solid var(--border-md);
+  border-radius:50%;color:var(--text-dim);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-appearance:none;transition:background 0.12s;
+  padding:0;line-height:1;
+}
+.info-btn:active{background:var(--bg2);}
+ 
+/* ── INFO SCREEN ── */
+#infoScreen{flex-direction:column;background:var(--bg);}
+.info-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 14px;border-bottom:0.5px solid var(--border);
+  background:var(--surface);flex-shrink:0;
+}
+.info-title{font-family:var(--serif);font-size:22px;color:var(--text);}
+.info-close{
+  padding:7px 14px;font-family:var(--sans);font-size:12px;
+  letter-spacing:0.06em;text-transform:uppercase;font-weight:700;
+  background:var(--bg);border:0.5px solid var(--border-md);
+  border-radius:var(--r-sm);color:var(--text-mid);cursor:pointer;
+  -webkit-appearance:none;
+}
+.info-close:active{background:var(--bg2);}
+.info-body{
+  flex:1;overflow-y:auto;padding:20px 24px;
+  display:flex;flex-direction:column;gap:18px;
+}
+.info-section{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:var(--r);padding:16px 18px;
+}
+.info-section p{
+  font-size:15px;line-height:1.6;color:var(--text-mid);
+}
+.info-section a{color:var(--accent);text-decoration:none;}
+.info-enjoy{
+  text-align:center;font-family:var(--serif);
+  font-size:20px;color:var(--text-dim);letter-spacing:0.04em;
+}
+.info-byline{
+  text-align:center;font-size:12px;color:var(--border-md);
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--text-dim);opacity:0.5;
+}
+ 
 /* ── SCREENS ── */
 #screens{display:none;flex:1;overflow:hidden;position:relative;}
 #screens.on{display:block;}
@@ -306,7 +361,10 @@ body.hist-active .rotate-msg{display:none!important;}
       </div>
     </div>
   </div>
-  <button class="start-btn" id="startBtn">Begin Match</button>
+  <div class="start-row">
+    <button class="start-btn" id="startBtn">Begin Match</button>
+    <button class="info-btn" id="infoBtn">i</button>
+  </div>
 </div>
  
 <!-- SCREENS -->
@@ -372,6 +430,28 @@ body.hist-active .rotate-msg{display:none!important;}
     </div>
   </div>
  
+ 
+  <!-- INFO -->
+  <div class="screen" id="infoScreen">
+    <div class="info-topbar">
+      <div class="info-title">ScoreBG</div>
+      <button class="info-close" onclick="closeInfo()">← Back</button>
+    </div>
+    <div class="info-body">
+      <div class="info-section">
+        <p><strong>New Game button:</strong> Pressing New Game logs the current game scores to the History page and starts a new game. You will see no changes on the Scoreboard after pushing it.</p>
+      </div>
+      <div class="info-section">
+        <p><strong>Adding ScoreBG to your Home Screen:</strong> The app is available at <a href="http://vanalstk.github.io">vanalstk.github.io</a>. To create a button on your home screen, load the URL in Safari, tap the Share button (the box with an arrow pointing upward), scroll down until you see <em>Add to Home Screen</em> and tap it, then tap <em>Add</em> in the top right corner.</p>
+      </div>
+      <div class="info-section">
+        <p><strong>Compatibility:</strong> ScoreBG was optimized for Safari on an iPhone. It may not work well on other platforms.</p>
+      </div>
+      <div class="info-enjoy">Enjoy!</div>
+      <div class="info-byline">Kathy Van Alstyne</div>
+    </div>
+  </div>
+ 
 </div><!-- #screens -->
 </div><!-- .app -->
  
@@ -401,6 +481,26 @@ document.getElementById('ptGrid').addEventListener('click', function(e) {
 });
  
 document.getElementById('startBtn').addEventListener('click', startMatch);
+document.getElementById('infoBtn').addEventListener('click', showInfo);
+document.getElementById('infoBtn').addEventListener('touchend', function(e){ e.preventDefault(); showInfo(); });
+ 
+function showInfo() {
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('screens').classList.add('on');
+  document.getElementById('infoScreen').classList.add('visible');
+  document.getElementById('matchScreen').classList.remove('visible');
+  document.getElementById('histScreen').classList.remove('visible');
+  document.body.classList.remove('match-active');
+  document.body.classList.add('hist-active');
+}
+ 
+function closeInfo() {
+  document.getElementById('screens').classList.remove('on');
+  document.getElementById('infoScreen').classList.remove('visible');
+  document.getElementById('setup').style.display = '';
+  document.body.classList.remove('hist-active');
+  document.body.classList.remove('match-active');
+}
 document.getElementById('startBtn').addEventListener('touchend', function(e) {
   e.preventDefault();
   startMatch();
@@ -427,6 +527,7 @@ function startMatch() {
 function showMatch() {
   document.getElementById('matchScreen').classList.add('visible');
   document.getElementById('histScreen').classList.remove('visible');
+  document.getElementById('infoScreen').classList.remove('visible');
   document.body.classList.remove('hist-active');
   document.body.classList.add('match-active');
 }
