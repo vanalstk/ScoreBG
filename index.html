@@ -202,12 +202,11 @@ body.hist-active .rotate-msg{display:none!important;}
 /* ── MATCH SCREEN ── */
 #matchScreen{flex-direction:row;height:100%;}
  
-/* Side panels — narrow, just name + pips + buttons */
 .p-panel{
-  flex:0 0 clamp(90px,18vw,160px);
+  flex:0 0 clamp(120px,26vw,220px);
   height:100%;
   display:flex;flex-direction:column;
-  padding:8px 6px;
+  padding:8px;
   gap:0;
   border-right:1px solid var(--border);
   background:var(--surface);
@@ -221,33 +220,47 @@ body.hist-active .rotate-msg{display:none!important;}
  
 /* Name row */
 .p-name-row{
-  display:flex;align-items:center;gap:5px;
+  display:flex;align-items:center;gap:6px;
   flex:0 0 auto;
   padding-bottom:4px;
 }
 .p-panel.right .p-name-row{flex-direction:row-reverse;}
 .p-dot{
-  width:6px;height:6px;border-radius:50%;
+  width:7px;height:7px;border-radius:50%;
   background:var(--accent);opacity:0.45;flex-shrink:0;
 }
 .p-name{
-  font-size:clamp(11px,2vw,22px);
+  font-size:clamp(12px,2.5vw,28px);
   letter-spacing:0.02em;text-transform:uppercase;font-weight:700;
   color:var(--text-mid);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   flex:1;min-width:0;
 }
 .p-panel.right .p-name{text-align:right;}
  
+/* Score number — fills available space between name and buttons */
+.score-big{
+  flex:1;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);
+  font-size:clamp(60px,16vh,160px);
+  line-height:1;
+  color:var(--text);text-align:center;letter-spacing:-2px;
+  min-height:0;
+  overflow:hidden;
+}
+.p-panel.winner .score-big{color:var(--accent);}
+ 
 /* Pips row */
 .pips-wrap{
-  display:flex;flex-wrap:wrap;gap:3px;justify-content:center;
-  flex:1;
-  padding:4px 2px;
+  display:flex;flex-wrap:wrap;gap:4px;justify-content:center;
+  flex:0 0 auto;
+  padding:3px 2px;
+  min-height:12px;
   align-content:center;
 }
 .pip{
-  width:clamp(5px,1vw,10px);
-  height:clamp(5px,1vw,10px);
+  width:clamp(6px,1.2vw,11px);
+  height:clamp(6px,1.2vw,11px);
   border-radius:50%;background:var(--border-md);
   flex-shrink:0;
 }
@@ -278,41 +291,13 @@ body.hist-active .rotate-msg{display:none!important;}
 }
 .s-btn.add:active{background:#cce8d8;}
  
-/* Big scores in centre — one per player */
-.c-scores{
-  display:flex;flex-direction:row;justify-content:center;align-items:center;
-  gap:8px;flex:1;min-height:0;
-}
-.c-score-block{
-  display:flex;flex-direction:column;align-items:center;
-  flex:1;min-width:0;
-}
-.c-score-name{
-  font-size:clamp(10px,1.8vw,16px);letter-spacing:0.08em;text-transform:uppercase;
-  color:var(--text-dim);font-weight:600;margin-bottom:2px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%;text-align:center;
-}
-.score-big{
-  font-family:var(--serif);
-  font-size:clamp(60px,18vh,180px);
-  line-height:1;
-  color:var(--text);text-align:center;letter-spacing:-2px;
-  flex-shrink:1;
-}
-.score-big.winner{color:var(--accent);}
-.c-score-sep{
-  font-family:var(--serif);
-  font-size:clamp(30px,8vh,80px);
-  color:var(--border-md);line-height:1;flex-shrink:0;
-  align-self:center;
-}
- 
 /* ── CENTRE COLUMN ── */
 .c-col{
   flex:1;display:flex;flex-direction:column;
-  padding:6px 8px;gap:5px;
+  padding:clamp(8px,1.5vw,16px) clamp(6px,1vw,12px);gap:clamp(5px,1vh,12px);
   overflow:hidden;min-width:0;background:var(--bg);
 }
+.c-spacer{flex:1;}
 .match-meta{
   display:flex;justify-content:center;align-items:center;
   gap:8px;flex-shrink:0;
@@ -450,6 +435,7 @@ body.hist-active .rotate-msg{display:none!important;}
         <div class="p-dot"></div>
         <div class="p-name" id="pn0">Player 1</div>
       </div>
+      <div class="score-big" id="ps0">0</div>
       <div class="pips-wrap" id="pp0"></div>
       <div class="score-btns">
         <button class="s-btn" onclick="adj(0,-1)">−</button>
@@ -465,22 +451,12 @@ body.hist-active .rotate-msg{display:none!important;}
         <span class="meta-tag" id="mGame">Game 1</span>
       </div>
       <div class="status-bar s-normal" id="sPill">Normal play</div>
-      <div class="c-scores">
-        <div class="c-score-block">
-          <div class="c-score-name" id="cn0">Player 1</div>
-          <div class="score-big" id="ps0">0</div>
-        </div>
-        <div class="c-score-sep">—</div>
-        <div class="c-score-block">
-          <div class="c-score-name" id="cn1">Player 2</div>
-          <div class="score-big" id="ps1">0</div>
-        </div>
-      </div>
       <div class="act-row">
         <button class="a-btn" onclick="logGame()">New Game</button>
         <button class="a-btn" onclick="newMatch()">New Match</button>
         <button class="a-btn" onclick="showHistory()">History</button>
       </div>
+      <div class="c-spacer"></div>
     </div>
  
     <!-- Player 2 right -->
@@ -489,6 +465,7 @@ body.hist-active .rotate-msg{display:none!important;}
         <div class="p-name" id="pn1">Player 2</div>
         <div class="p-dot"></div>
       </div>
+      <div class="score-big" id="ps1">0</div>
       <div class="pips-wrap" id="pp1"></div>
       <div class="score-btns">
         <button class="s-btn" onclick="adj(1,-1)">−</button>
