@@ -1,3 +1,6 @@
+Bgscore 11 · HTML
+Copy
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -710,6 +713,39 @@ function renderHistory() {
   body.innerHTML = rows.join('');
 }
 </script>
+ 
+<script>
+// Wake Lock — keeps screen on while app is active
+let wakeLock = null;
+ 
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+    }
+  } catch (err) {
+    // Wake lock failed silently — not critical
+  }
+}
+ 
+async function releaseWakeLock() {
+  if (wakeLock) {
+    await wakeLock.release();
+    wakeLock = null;
+  }
+}
+ 
+// Reacquire wake lock when app comes back to foreground
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    requestWakeLock();
+  } else {
+    releaseWakeLock();
+  }
+});
+ 
+// Start wake lock on load
+requestWakeLock();
+</script>
 </body>
 </html>
- 
