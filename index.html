@@ -1,6 +1,3 @@
-Bgscore 11 · HTML
-Copy
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -253,21 +250,7 @@ body.hist-active .rotate-msg{display:none!important;}
 }
 .p-panel.winner .score-big{color:var(--accent);}
  
-/* Pips row */
-.pips-wrap{
-  display:flex;flex-wrap:wrap;gap:4px;justify-content:center;
-  flex:0 0 auto;
-  padding:3px 2px;
-  min-height:12px;
-  align-content:center;
-}
-.pip{
-  width:clamp(6px,1.2vw,11px);
-  height:clamp(6px,1.2vw,11px);
-  border-radius:50%;background:var(--border-md);
-  flex-shrink:0;
-}
-.pip.on{background:var(--text);}
+ 
  
 /* Buttons — fixed height, always visible */
 .score-btns{
@@ -439,7 +422,6 @@ body.hist-active .rotate-msg{display:none!important;}
         <div class="p-name" id="pn0">Player 1</div>
       </div>
       <div class="score-big" id="ps0">0</div>
-      <div class="pips-wrap" id="pp0"></div>
       <div class="score-btns">
         <button class="s-btn" onclick="adj(0,-1)">−</button>
         <button class="s-btn add" onclick="adj(0,1)">+</button>
@@ -469,7 +451,6 @@ body.hist-active .rotate-msg{display:none!important;}
         <div class="p-dot"></div>
       </div>
       <div class="score-big" id="ps1">0</div>
-      <div class="pips-wrap" id="pp1"></div>
       <div class="score-btns">
         <button class="s-btn" onclick="adj(1,-1)">−</button>
         <button class="s-btn add" onclick="adj(1,1)">+</button>
@@ -655,21 +636,10 @@ function newMatch() {
   showMatch();
 }
  
-function makePips(el, score, total) {
-  el.innerHTML = '';
-  var n = Math.min(total, 25);
-  for (var i = 0; i < n; i++) {
-    var d = document.createElement('div');
-    d.className = 'pip' + (i < score ? ' on' : '');
-    el.appendChild(d);
-  }
-}
- 
 function render() {
   for (var i = 0; i < 2; i++) {
     document.getElementById('pn' + i).textContent = S.p[i];
     document.getElementById('ps' + i).textContent = S.scores[i];
-    makePips(document.getElementById('pp' + i), S.scores[i], S.ml);
     document.getElementById('pan' + i).classList.toggle('winner', S.done && S.scores[i] >= S.ml);
   }
   document.getElementById('mTitle').textContent = S.ml + '-pt match';
@@ -749,3 +719,4 @@ requestWakeLock();
 </script>
 </body>
 </html>
+ 
