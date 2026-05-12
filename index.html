@@ -203,10 +203,10 @@ body.hist-active .rotate-msg{display:none!important;}
 #matchScreen{flex-direction:row;height:100%;}
  
 .p-panel{
-  flex:0 0 clamp(120px,26vw,220px);
+  flex:1;
   height:100%;
   display:flex;flex-direction:column;
-  padding:8px;
+  padding:10px 16px 10px 20px;
   gap:0;
   border-right:1px solid var(--border);
   background:var(--surface);
@@ -216,6 +216,7 @@ body.hist-active .rotate-msg{display:none!important;}
 .p-panel.right{
   border-right:none;
   border-left:1px solid var(--border);
+  padding:10px 20px 10px 16px;
 }
  
 /* Name row */
@@ -242,7 +243,7 @@ body.hist-active .rotate-msg{display:none!important;}
   flex:1;
   display:flex;align-items:center;justify-content:center;
   font-family:var(--serif);
-  font-size:clamp(60px,16vh,160px);
+  font-size:clamp(100px,28vh,280px);
   line-height:1;
   color:var(--text);text-align:center;letter-spacing:-2px;
   min-height:0;
@@ -279,37 +280,39 @@ body.hist-active .rotate-msg{display:none!important;}
  
 /* ── CENTRE COLUMN ── */
 .c-col{
-  flex:1;display:flex;flex-direction:column;
-  padding:clamp(8px,1.5vw,16px) clamp(6px,1vw,12px);gap:clamp(5px,1vh,12px);
+  flex:0 0 clamp(100px,18vw,160px);display:flex;flex-direction:column;
+  padding:8px 6px;gap:6px;
   overflow:hidden;min-width:0;background:var(--bg);
 }
 .c-spacer{flex:1;}
 .match-meta{
-  display:flex;justify-content:center;align-items:center;
-  gap:8px;flex-shrink:0;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:2px;flex-shrink:0;
 }
 .meta-tag{
-  font-size:clamp(11px,2.2vw,20px);letter-spacing:0.06em;text-transform:uppercase;
-  color:var(--text-dim);font-weight:600;
+  font-size:clamp(9px,1.4vw,13px);letter-spacing:0.04em;text-transform:uppercase;
+  color:var(--text-dim);font-weight:600;text-align:center;
 }
-.meta-dot{width:4px;height:4px;border-radius:50%;background:var(--border-md);}
+.meta-dot{display:none;}
  
 .status-bar{
-  text-align:center;padding:clamp(7px,1.2vh,12px) 10px;border-radius:100px;
-  font-size:clamp(12px,2.4vw,20px);font-weight:700;letter-spacing:0.03em;flex-shrink:0;
+  text-align:center;padding:5px 4px;border-radius:100px;
+  font-size:clamp(9px,1.4vw,13px);font-weight:700;letter-spacing:0.02em;flex-shrink:0;
 }
 .s-normal{background:rgba(60,50,30,0.06);color:var(--text-dim);}
 .s-crawford{background:var(--red-bg);color:var(--red);}
 .s-post{background:var(--amber-bg);color:var(--amber);}
 .s-done{background:var(--accent-bg);color:var(--accent);}
  
-.act-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;flex-shrink:0;}
+.act-row{display:flex;flex-direction:column;gap:6px;flex:1;}
 .a-btn{
-  padding:clamp(8px,1.5vh,15px) 2px;font-family:var(--sans);font-size:clamp(10px,1.8vw,15px);
+  flex:1;
+  padding:0 2px;font-family:var(--sans);font-size:clamp(9px,1.5vw,13px);
   letter-spacing:0.03em;text-transform:uppercase;font-weight:700;
   background:var(--surface);border:0.5px solid var(--border);
   border-radius:var(--r-sm);color:var(--text-mid);cursor:pointer;
   text-align:center;transition:background 0.1s;-webkit-appearance:none;
+  display:flex;align-items:center;justify-content:center;
 }
 .a-btn:active{background:var(--bg2);}
  
@@ -432,7 +435,6 @@ body.hist-active .rotate-msg{display:none!important;}
     <div class="c-col">
       <div class="match-meta">
         <span class="meta-tag" id="mTitle">5-pt match</span>
-        <div class="meta-dot"></div>
         <span class="meta-tag" id="mGame">Game 1</span>
       </div>
       <div class="status-bar s-normal" id="sPill">Normal play</div>
@@ -745,3 +747,4 @@ document.addEventListener('touchend', function() {
   src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAA0ZtZGF0AAACrgYF//+q3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE1MiByMjg1NCBlOWE1OTAzIC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAxNyAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFseXNlPTB4MzoweDExMyBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVkX3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MSBjcW09MCBkZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD0tMiB0aHJlYWRzPTMgbG9va2FoZWFkX3RocmVhZHM9MSBzbGljZWRfdGhyZWFkcz0wIG5yPTAgZGVjaW1hdGU9MSBpbnRlcmxhY2VkPTAgYmx1cmF5X2NvbXBhdD0wIGNvbnN0cmFpbmVkX2ludHJhPTAgYmZyYW1lcz0zIGJfcHlyYW1pZD0yIGJfYWRhcHQ9MSBiX2JpYXM9MCBkaXJlY3Q9MSB3ZWlnaHRiPTEgb3Blbl9nb3A9MCB3ZWlnaHRwPTIga2V5aW50PTI1MCBrZXlpbnRfbWluPTEwIHNjZW5lY3V0PTQwIGludHJhX3JlZnJlc2g9MCByY19sb29rYWhlYWQ9NDAgcmM9Y3JmIG1idHJlZT0xIGNyZj0yMy4wIHFjb21wPTAuNjAgcXBtaW49MCBxcG1heD02OSBxcHN0ZXA9NCBpcF9yYXRpbz0xLjQwIGFxPTE6MS4wMACAAAABZWWIhAAz//727L4FNf2f0JcRLMXaSnA+KqSAgHc0wAAAAwAAAwAAFgn0a"></video>
 </body>
 </html>
+ 
